@@ -1,6 +1,7 @@
 const User = require('../models/userModel')
 const asyncHandler = require('express-async-handler')
 const { generateToken } = require('../config/jwtToken')
+const validateMongoDbId = require('../utils/validateMongodbId')
 
 // Create user
 const createUser = asyncHandler(async (req, res) => {
@@ -58,11 +59,12 @@ const getUsers = asyncHandler(async (req, res) => {
 // Get a user
 const getUser = asyncHandler(async (req, res) => {
   const { id } = req.params
+  validateMongoDbId(id)
 
   try {
     const getAUser = await User.findById(id)
 
-    res.json(getAUser)
+    res.json({ getAUser })
   } catch (error) {
     throw new Error(error)
   }
@@ -70,14 +72,14 @@ const getUser = asyncHandler(async (req, res) => {
 
 // Update a user
 const updateUser = asyncHandler(async (req, res) => {
-  const { id } = req.params
+  const { id } = req.user
   const newData = req.body
+  validateMongoDbId(id)
 
   try {
     const updatedUser = await User.findByIdAndUpdate(id, newData, {
       new: true
     })
-    console.log(updatedUser)
 
     res.json(updatedUser)
   } catch (error) {
@@ -88,11 +90,56 @@ const updateUser = asyncHandler(async (req, res) => {
 // Delete a user
 const deleteUser = asyncHandler(async (req, res) => {
   const { id } = req.params
+  validateMongoDbId(id)
 
   try {
     const deletedUser = await User.findByIdAndRemove(id)
 
     res.json(deletedUser)
+  } catch (error) {
+    throw new Error(error)
+  }
+})
+
+// Block user
+const blockUser = asyncHandler(async (req, res) => {
+  const { id } = req.params
+  validateMongoDbId(id)
+
+  try {
+    await User.findByIdAndUpdate(
+      id,
+      {
+        isBlocked: true
+      },
+      { new: true }
+    )
+
+    res.json({
+      message: 'User Blocked'
+    })
+  } catch (error) {
+    throw new Error(error)
+  }
+})
+
+// Unblock user
+const unblockUser = asyncHandler(async (req, res) => {
+  const { id } = req.params
+  validateMongoDbId(id)
+
+  try {
+    await User.findByIdAndUpdate(
+      id,
+      {
+        isBlocked: false
+      },
+      { new: true }
+    )
+
+    res.json({
+      message: 'User Unblocked'
+    })
   } catch (error) {
     throw new Error(error)
   }
@@ -104,5 +151,7 @@ module.exports = {
   getUsers,
   getUser,
   updateUser,
-  deleteUser
+  deleteUser,
+  blockUser,
+  unblockUser
 }
