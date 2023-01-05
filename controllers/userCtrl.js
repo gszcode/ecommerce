@@ -1,7 +1,9 @@
 const User = require('../models/userModel')
 const asyncHandler = require('express-async-handler')
 const { generateToken } = require('../config/jwtToken')
+const { generateRefreshToken } = require('../config/refreshToken')
 const validateMongoDbId = require('../utils/validateMongodbId')
+const jwt = require('jsonwebtoken')
 
 // Create user
 const createUser = asyncHandler(async (req, res) => {
@@ -41,8 +43,73 @@ const loginUser = asyncHandler(async (req, res) => {
   }
 
   const token = generateToken(user._id)
+  const refreshToken = generateRefreshToken(user._id)
+
+  await User.findByIdAndUpdate(
+    user._id,
+    { refreshToken },
+    {
+      new: true
+    }
+  )
+
+  res.cookie('refreshToken', refreshToken, {
+    httpOnly: true,
+    maxAge: 72 * 60 * 60 * 1000
+  })
 
   res.json({ user, token })
+})
+
+// Handle refresh token
+const handleRefreshToken = asyncHandler(async (req, res) => {
+  const { refreshToken } = req.cookies
+
+  if (!refreshToken) {
+    throw new Error('No Refresh Token in Cookies')
+  }
+
+  const user = await User.findOne({ refreshToken })
+  if (!user) {
+    throw new Error('No Refresh token present in db or not matched')
+  }
+
+  const { id } = jwt.verify(refreshToken, process.env.JWT_SECRET)
+  if (!id || id !== user.id) {
+    throw new Error('There is something wrong with refresh token')
+  }
+
+  const accessToken = generateToken(user.id)
+
+  res.json(accessToken)
+})
+
+// Logout user
+const logoutUser = asyncHandler(async (req, res) => {
+  const { refreshToken } = req.cookies
+
+  if (!refreshToken) {
+    throw new Error('No Refresh Token in Cookies')
+  }
+
+  const user = await User.findOne({ refreshToken })
+  if (!user) {
+    res.clearCookie('refreshToken', {
+      httpOnly: true,
+      secure: true
+    })
+    return res.sendStatus(204)
+  }
+
+  await User.findOneAndUpdate(refreshToken, {
+    refreshToken: ''
+  })
+
+  res.clearCookie('refreshToken', {
+    httpOnly: true,
+    secure: true
+  })
+  res.sendStatus(204)
 })
 
 // Get all users
@@ -153,5 +220,7 @@ module.exports = {
   updateUser,
   deleteUser,
   blockUser,
-  unblockUser
+  unblockUser,
+  handleRefreshToken,
+  logoutUser
 }
