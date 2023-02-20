@@ -40,13 +40,10 @@ const userSchema = new Schema(
       type: Array,
       default: []
     },
-    address: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: 'Addres'
-      }
-    ],
-    wishList: [
+    address: {
+      type: String
+    },
+    wishlist: [
       {
         type: Schema.Types.ObjectId,
         ref: 'Product'

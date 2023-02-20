@@ -37,9 +37,7 @@ const productSchema = new Schema(
       type: Number,
       default: 0
     },
-    images: {
-      type: Array
-    },
+    images: [],
     color: {
       type: String,
       required: true
@@ -47,12 +45,17 @@ const productSchema = new Schema(
     ratings: [
       {
         star: Number,
+        comment: String,
         postedby: {
           type: Schema.Types.ObjectId,
           ref: 'User'
         }
       }
-    ]
+    ],
+    totalratings: {
+      type: String,
+      default: 0
+    }
   },
   {
     timestamps: true
