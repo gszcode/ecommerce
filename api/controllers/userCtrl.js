@@ -502,13 +502,28 @@ const createOrder = asyncHandler(async (req, res) => {
   }
 })
 
-// Get orders
-const getOrders = asyncHandler(async (req, res) => {
+// Get order
+const getOrder = asyncHandler(async (req, res) => {
   const { id } = req.user
 
   try {
-    const userOrders = await Order.findOne({ orderby: id })
+    const userOrder = await Order.findOne({ orderby: id })
       .populate('products.product')
+      .populate('orderby')
+      .exec()
+
+    res.json(userOrder)
+  } catch (error) {
+    throw new Error(error)
+  }
+})
+
+// Get all orders
+const getAllOrders = asyncHandler(async (req, res) => {
+  try {
+    const userOrders = await Order.find()
+      .populate('products.product')
+      .populate('orderby')
       .exec()
 
     res.json(userOrders)
@@ -562,6 +577,7 @@ module.exports = {
   emptyCart,
   applyCoupon,
   createOrder,
-  getOrders,
+  getOrder,
+  getAllOrders,
   updateOrderStatus
 }
