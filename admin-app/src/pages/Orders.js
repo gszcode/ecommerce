@@ -2,6 +2,8 @@ import React, { useEffect } from 'react'
 import { Table } from 'antd'
 import { useDispatch, useSelector } from 'react-redux'
 import { getOrders } from '../features/auth/authSlice'
+import { Link } from 'react-router-dom'
+import { AiFillDelete } from 'react-icons/ai'
 
 const columns = [
   {
@@ -17,8 +19,16 @@ const columns = [
     dataIndex: 'product'
   },
   {
-    title: 'Status',
-    dataIndex: 'status'
+    title: 'Amount',
+    dataIndex: 'amount'
+  },
+  {
+    title: 'Date',
+    dataIndex: 'date'
+  },
+  {
+    title: 'Action',
+    dataIndex: 'action'
   }
 ]
 
@@ -33,14 +43,26 @@ const Orders = () => {
   console.log(orderState)
 
   const data = []
-  // for (let i = 0; i < orderState.length; i++) {
-  //   data.push({
-  //     key: '4',
-  //     name: 'John Brown',
-  //     product: 32,
-  //     status: 'New York No. 1 Lake Park'
-  //   })
-  // }
+  for (let i = 0; i < orderState.length; i++) {
+    data.push({
+      key: i + 1,
+      name: orderState[i].orderby.firstname,
+      product: orderState[i].products.map((item) => (
+        <ul>
+          <li>{item.product.title}</li>
+        </ul>
+      )),
+      amount: orderState[i].paymentIntent.amount,
+      date: new Date(orderState[i].createdAt).toLocaleDateString(),
+      action: (
+        <>
+          <Link to="/" className="ms-3 fs-3 text-danger">
+            <AiFillDelete />
+          </Link>
+        </>
+      )
+    })
+  }
 
   return (
     <div>
