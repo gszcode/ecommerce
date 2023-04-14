@@ -23,8 +23,9 @@ const {
   emptyCart,
   applyCoupon,
   createOrder,
-  getOrders,
-  updateOrderStatus
+  getOrder,
+  updateOrderStatus,
+  getAllOrders
 } = require('../controllers/userCtrl')
 
 router.post('/register', createUser)
@@ -44,7 +45,8 @@ router.post('/cart', authMiddleware, userCart)
 router.get('/logout', logoutUser)
 router.put('/password', authMiddleware, updatePassword)
 router.get('/all-users', getUsers)
-router.get('/get-orders', authMiddleware, getOrders)
+router.get('/getallorders', authMiddleware, isAdmin, getAllOrders)
+router.get('/get-orders', authMiddleware, getOrder)
 router.get('/:id', getUser)
 
 router.delete('/empty-cart', authMiddleware, emptyCart)
