@@ -40,8 +40,6 @@ const Orders = () => {
     dispatch(getOrders())
   }, [dispatch])
 
-  console.log(orderState)
-
   const data = []
   for (let i = 0; i < orderState.length; i++) {
     data.push({
