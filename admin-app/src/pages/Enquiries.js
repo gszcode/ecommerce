@@ -40,8 +40,6 @@ const Enquires = () => {
     dispatch(getEnquiries())
   }, [dispatch])
 
-  console.log(enqState)
-
   const data = []
   for (let i = 0; i < enqState.length; i++) {
     data.push({
