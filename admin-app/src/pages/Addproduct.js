@@ -1,24 +1,56 @@
 import React, { useState } from 'react'
 import CustomInput from '../components/CustomInput'
 import ReactQuill from 'react-quill'
+import { useFormik } from 'formik'
+import * as Yup from 'yup'
+import { useDispatch } from 'react-redux'
 
 const Addproduct = () => {
+  const dispatch = useDispatch()
   const [desc, setDesc] = useState()
   const handleDesc = (e) => {
     setDesc(e)
   }
 
+  let userSchema = Yup.object({
+    title: Yup.string().required('Title is Required'),
+    description: Yup.string().required('Description is Required')
+  })
+
+  const formik = useFormik({
+    initialValues: {
+      title: '',
+      description: ''
+    },
+    validationSchema: userSchema,
+    onSubmit: (values) => {
+      alert(JSON.stringify(values))
+    }
+  })
+
   return (
     <div>
       <h3 className="mb-4 title">Add Product</h3>
       <div>
-        <form>
-          <CustomInput type="text" label="Enter Product Title" />
+        <form onSubmit={formik.handleSubmit}>
+          <CustomInput
+            type="text"
+            label="Enter Product Title"
+            name="title"
+            onCh={formik.handleChange('title')}
+            onBlur={formik.handleBlur('title')}
+            val={formik.values.title}
+          />
+          <div className="error">
+            {formik.touched.title && formik.errors.title}
+          </div>
           <div className="mb-3">
             <ReactQuill
               theme="snow"
-              value={desc}
-              onChange={(event) => handleDesc(event.target)}
+              name="description"
+              onChange={formik.handleChange('description')}
+              onBlur={formik.handleBlur('description')}
+              value={formik.values.description}
             />
           </div>
           <CustomInput type="number" label="Enter Product Price" />
