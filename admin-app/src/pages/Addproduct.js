@@ -27,13 +27,6 @@ const Addproduct = () => {
     })
   })
 
-  useEffect(() => {
-    dispatch(getBrands())
-    dispatch(getCategories())
-    dispatch(getColors())
-    formik.values.color = color
-  }, [dispatch, color])
-
   let userSchema = Yup.object({
     title: Yup.string().required('Title is Required'),
     description: Yup.string().required('Description is Required'),
@@ -59,6 +52,13 @@ const Addproduct = () => {
       alert(JSON.stringify(values))
     }
   })
+
+  useEffect(() => {
+    dispatch(getBrands())
+    dispatch(getCategories())
+    dispatch(getColors())
+    formik.values.color = color
+  }, [dispatch, formik.values, color])
 
   return (
     <div>
