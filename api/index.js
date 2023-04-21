@@ -27,6 +27,7 @@ const brandRouter = require('./routes/brandRoute')
 const colorRouter = require('./routes/colorRoute')
 const couponRouter = require('./routes/couponRoute')
 const enqRouter = require('./routes/enqRoute')
+const uploadRouter = require('./routes/uploadRute')
 
 app.use('/api/user', authRouter)
 app.use('/api/product', productRouter)
@@ -37,6 +38,7 @@ app.use('/api/brand', brandRouter)
 app.use('/api/color', colorRouter)
 app.use('/api/coupon', couponRouter)
 app.use('/api/enquiry', enqRouter)
+app.use('/api/upload', uploadRouter)
 
 // Error handler
 app.use(notFound)
