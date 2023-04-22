@@ -10,20 +10,32 @@ import { getColors } from '../features/color/colorSlice'
 import Multiselect from 'react-widgets/Multiselect'
 import Dropzone from 'react-dropzone'
 import 'react-widgets/styles.css'
+import { deleteImg, uploadImg } from '../features/upload/uploadSlice'
+import { createProducts } from '../features/product/productSlice'
 
 const Addproduct = () => {
   const dispatch = useDispatch()
-  const brandState = useSelector((state) => state.brand.brands)
   const [color, setColor] = useState([])
+  const [images, setImages] = useState([])
 
+  const brandState = useSelector((state) => state.brand.brands)
   const pCategoryState = useSelector((state) => state.pCategory.pCategories)
   const colorState = useSelector((state) => state.color.colors)
-  const colors = []
+  const imgState = useSelector((state) => state.upload.images)
 
+  const colors = []
   colorState.forEach((color) => {
     colors.push({
       id: color._id,
       color: color.title
+    })
+  })
+
+  const imgs = []
+  imgState.forEach((img) => {
+    imgs.push({
+      public_id: img.public_id,
+      url: img.url
     })
   })
 
@@ -45,20 +57,25 @@ const Addproduct = () => {
       brand: '',
       category: '',
       color: '',
-      quantity: ''
+      quantity: '',
+      images: ''
     },
     validationSchema: userSchema,
     onSubmit: (values) => {
-      alert(JSON.stringify(values))
+      dispatch(createProducts(values))
     }
   })
+
+  useEffect(() => {
+    formik.values.color = color
+    formik.values.images = imgs
+  }, [formik.values, color, imgs])
 
   useEffect(() => {
     dispatch(getBrands())
     dispatch(getCategories())
     dispatch(getColors())
-    formik.values.color = color
-  }, [dispatch, formik.values, color])
+  }, [dispatch])
 
   return (
     <div>
@@ -154,7 +171,9 @@ const Addproduct = () => {
             {formik.touched.quantity && formik.errors.quantity}
           </div>
           <div className="bg-white border-1 p-5 text-center">
-            <Dropzone onDrop={(acceptedFiles) => console.log(acceptedFiles)}>
+            <Dropzone
+              onDrop={(acceptedFiles) => dispatch(uploadImg(acceptedFiles))}
+            >
               {({ getRootProps, getInputProps }) => (
                 <section>
                   <div {...getRootProps()}>
@@ -166,6 +185,19 @@ const Addproduct = () => {
                 </section>
               )}
             </Dropzone>
+          </div>
+          <div className="showimages d-flex flex-wrap gap-3">
+            {imgState.map((i, j) => (
+              <div className="position-relative" key={j}>
+                <button
+                  type="button"
+                  className="btn-close position-absolute"
+                  style={{ top: '7px', right: '7px' }}
+                  onClick={() => dispatch(deleteImg(i.public_id))}
+                ></button>
+                <img src={`${i.url}`} alt={`${i.url}`} />
+              </div>
+            ))}
           </div>
           <button
             className="btn btn-success border-0 rounded-3 my-5"
