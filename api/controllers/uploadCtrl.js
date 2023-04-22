@@ -13,7 +13,7 @@ const uploadImages = asyncHandler(async (req, res) => {
     const files = req.files
 
     for (const file of files) {
-      const path = file
+      const { path } = file
       const newpath = await uploader(path)
 
       urls.push(newpath)
