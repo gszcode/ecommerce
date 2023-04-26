@@ -44,7 +44,7 @@ const productSchema = new Schema(
       }
     ],
     color: [],
-    tags: [],
+    tags: String,
     ratings: [
       {
         star: Number,
