@@ -2,32 +2,29 @@ import React, { useState, useEffect } from 'react'
 import CustomInput from '../components/CustomInput'
 import ReactQuill from 'react-quill'
 import { useFormik } from 'formik'
-import * as Yup from 'yup'
-import { useDispatch, useSelector } from 'react-redux'
+import { userSchema } from '../utils/validations'
+import { useDispatch } from 'react-redux'
 import { getBrands } from '../features/brand/brandSlice'
 import { getCategories } from '../features/pcategory/pcategorySlice'
 import { getColors } from '../features/color/colorSlice'
-import Multiselect from 'react-widgets/Multiselect'
+import { Select } from 'antd'
 import Dropzone from 'react-dropzone'
-import 'react-widgets/styles.css'
 import { deleteImg, uploadImg } from '../features/upload/uploadSlice'
 import { createProducts } from '../features/product/productSlice'
+import { useStore } from '../utils/useSelectors'
+import { useNavigate } from 'react-router-dom'
 
 const Addproduct = () => {
+  const navigate = useNavigate()
   const dispatch = useDispatch()
   const [color, setColor] = useState([])
-  const [images, setImages] = useState([])
-
-  const brandState = useSelector((state) => state.brand.brands)
-  const pCategoryState = useSelector((state) => state.pCategory.pCategories)
-  const colorState = useSelector((state) => state.color.colors)
-  const imgState = useSelector((state) => state.upload.images)
+  const { brandState, pCategoryState, colorState, imgState } = useStore()
 
   const colors = []
   colorState.forEach((color) => {
     colors.push({
-      id: color._id,
-      color: color.title
+      value: color._id,
+      label: color.title
     })
   })
 
@@ -39,16 +36,6 @@ const Addproduct = () => {
     })
   })
 
-  let userSchema = Yup.object({
-    title: Yup.string().required('Title is Required'),
-    description: Yup.string().required('Description is Required'),
-    price: Yup.number().required('Price is Required'),
-    brand: Yup.string().required('Brand is Required'),
-    category: Yup.string().required('Category is Required'),
-    color: Yup.array().required('Colors are Required'),
-    quantity: Yup.number().required('Quantity is Required')
-  })
-
   const formik = useFormik({
     initialValues: {
       title: '',
@@ -56,6 +43,7 @@ const Addproduct = () => {
       price: '',
       brand: '',
       category: '',
+      tags: '',
       color: '',
       quantity: '',
       images: ''
@@ -63,6 +51,11 @@ const Addproduct = () => {
     validationSchema: userSchema,
     onSubmit: (values) => {
       dispatch(createProducts(values))
+      formik.resetForm()
+      setColor(null)
+      setTimeout(() => {
+        navigate('/admin/list-product')
+      }, 3000)
     }
   })
 
@@ -76,6 +69,11 @@ const Addproduct = () => {
     dispatch(getCategories())
     dispatch(getColors())
   }, [dispatch])
+
+  const handleColors = (e) => {
+    setColor(e)
+    console.log(e)
+  }
 
   return (
     <div>
@@ -148,12 +146,29 @@ const Addproduct = () => {
           <div className="error">
             {formik.touched.category && formik.errors.category}
           </div>
-          <Multiselect
-            name="color"
-            dataKey="id"
-            textField="color"
-            data={colors}
-            onChange={(e) => setColor(e)}
+          <select
+            name="tags"
+            onChange={formik.handleChange('tags')}
+            onBlur={formik.handleBlur('tags')}
+            value={formik.values.tags}
+            className="form-control py-3 mb-3"
+          >
+            <option disabled>Select tags</option>
+            <option value="featured">Featured</option>
+            <option value="popular">Popular</option>
+            <option value="special">Special</option>
+          </select>
+          <div className="error">
+            {formik.touched.tags && formik.errors.tags}
+          </div>
+          <Select
+            mode="multiple"
+            options={colors}
+            allowClear
+            className="w-100"
+            placeholder="Select colors"
+            defaultValue={color}
+            onChange={(i) => handleColors(i)}
           />
           <div className="error">
             {formik.touched.color && formik.errors.color}
