@@ -58,12 +58,12 @@ export const productSlice = createSlice({
       state.isLoading = false
       state.isError = false
       state.isSuccess = true
-      state.products = action.payload
+      state.createdProduct = action.payload
     })
     builder.addCase(createProducts.rejected, (state, action) => {
       state.isLoading = false
-      state.isError = false
-      state.isSuccess = true
+      state.isError = true
+      state.isSuccess = false
       state.message = action.error
     })
   }
