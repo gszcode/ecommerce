@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
+import { createSlice, createAsyncThunk, createAction } from '@reduxjs/toolkit'
 import bCategoryService from './bcategoryService'
 
 const initialState = {
@@ -8,6 +8,8 @@ const initialState = {
   isSuccess: false,
   message: ''
 }
+
+export const resetState = createAction('Reset_all')
 
 export const getCategories = createAsyncThunk(
   'blogCategory/get-categories',
@@ -25,21 +27,23 @@ export const bCategorySlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(getCategories.pending, (state) => {
-      state.isLoading = true
-    })
-    builder.addCase(getCategories.fulfilled, (state, action) => {
-      state.isLoading = false
-      state.isError = false
-      state.isSuccess = true
-      state.bCategories = action.payload
-    })
-    builder.addCase(getCategories.rejected, (state, action) => {
-      state.isLoading = false
-      state.isError = true
-      state.isSuccess = false
-      state.message = action.error
-    })
+    builder
+      .addCase(getCategories.pending, (state) => {
+        state.isLoading = true
+      })
+      .addCase(getCategories.fulfilled, (state, action) => {
+        state.isLoading = false
+        state.isError = false
+        state.isSuccess = true
+        state.bCategories = action.payload
+      })
+      .addCase(getCategories.rejected, (state, action) => {
+        state.isLoading = false
+        state.isError = true
+        state.isSuccess = false
+        state.message = action.error
+      })
+      .addCase(resetState, () => initialState)
   }
 })
 
