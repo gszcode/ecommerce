@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import CustomInput from '../components/CustomInput'
 import ReactQuill from 'react-quill'
 import { useFormik } from 'formik'
-import { userSchema } from '../utils/validations'
+import { productSchema } from '../utils/validations'
 import { useDispatch } from 'react-redux'
 import { getBrands } from '../features/brand/brandSlice'
 import { getCategories } from '../features/pcategory/pcategorySlice'
@@ -11,20 +11,32 @@ import { Select } from 'antd'
 import Dropzone from 'react-dropzone'
 import { deleteImg, uploadImg } from '../features/upload/uploadSlice'
 import { createProducts } from '../features/product/productSlice'
-import { useStore } from '../utils/useSelectors'
+import { useStore } from '../hooks/useStore'
 import { useNavigate } from 'react-router-dom'
+import { toast } from 'react-toastify'
 
 const Addproduct = () => {
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const [color, setColor] = useState([])
-  const { brandState, pCategoryState, colorState, imgState } = useStore()
+  const { brandState, pCategoryState, colorState, imgState, newProduct } =
+    useStore()
+
+  const { isSuccess, isError, isLoading, createdProduct } = newProduct
+  useEffect(() => {
+    if (isSuccess && createdProduct) {
+      toast.success('Product Added Successfully!')
+    }
+    if (isError) {
+      toast.error('Something went Wrong!')
+    }
+  }, [isSuccess, isError, isLoading, createdProduct])
 
   const colors = []
   colorState.forEach((color) => {
     colors.push({
-      value: color._id,
-      label: color.title
+      value: color.title,
+      label: color._id
     })
   })
 
@@ -48,7 +60,7 @@ const Addproduct = () => {
       quantity: '',
       images: ''
     },
-    validationSchema: userSchema,
+    validationSchema: productSchema,
     onSubmit: (values) => {
       dispatch(createProducts(values))
       formik.resetForm()
@@ -72,7 +84,6 @@ const Addproduct = () => {
 
   const handleColors = (e) => {
     setColor(e)
-    console.log(e)
   }
 
   return (
