@@ -1,6 +1,6 @@
 import * as Yup from 'yup'
 
-export const userSchema = Yup.object({
+export const productSchema = Yup.object({
   title: Yup.string().required('Title is Required'),
   description: Yup.string().required('Description is Required'),
   price: Yup.number().required('Price is Required'),
@@ -11,4 +11,8 @@ export const userSchema = Yup.object({
     .min(1, 'Pick at least one Color')
     .required('Colors are Required'),
   quantity: Yup.number().required('Quantity is Required')
+})
+
+export const titleSchema = Yup.object({
+  title: Yup.string().required('Title Name is Required')
 })
