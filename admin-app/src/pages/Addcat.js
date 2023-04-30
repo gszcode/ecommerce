@@ -19,7 +19,7 @@ const Addcat = () => {
       toast.success('Category created Successfully!')
     }
     if (isError) {
-      toast.error('Something went Wrong!!')
+      toast.error('Something went Wrong!')
     }
   }, [isSuccess, isError, isLoading, createdCategory])
 
