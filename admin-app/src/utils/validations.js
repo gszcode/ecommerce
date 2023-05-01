@@ -13,6 +13,16 @@ export const productSchema = Yup.object({
   quantity: Yup.number().required('Quantity is Required')
 })
 
+export const blogSchema = Yup.object({
+  title: Yup.string().required('Title is Required'),
+  description: Yup.string().required('Description is Required'),
+  category: Yup.string().required('Category is Required')
+})
+
 export const titleSchema = Yup.object({
   title: Yup.string().required('Title Name is Required')
+})
+
+export const colorSchema = Yup.object({
+  title: Yup.string().required('Color is Required')
 })
