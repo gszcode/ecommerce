@@ -1,6 +1,8 @@
 import { createSlice, createAsyncThunk, createAction } from '@reduxjs/toolkit'
 import bCategoryService from './bcategoryService'
 
+export const resetState = createAction('Reset_all')
+
 const initialState = {
   bCategories: [],
   isLoading: false,
@@ -8,8 +10,6 @@ const initialState = {
   isSuccess: false,
   message: ''
 }
-
-export const resetState = createAction('Reset_all')
 
 export const getCategories = createAsyncThunk(
   'blogCategory/get-categories',
