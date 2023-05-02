@@ -1,15 +1,14 @@
 import React, { useEffect } from 'react'
 import CustomInput from '../components/CustomInput'
 import { useDispatch } from 'react-redux'
-import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { useFormik } from 'formik'
 import { titleSchema } from '../utils/validations'
 import { createBrand } from '../features/brand/brandSlice'
 import { useStore } from '../hooks/useStore'
+import { resetState } from '../features/bcategory/bcategorySlice'
 
 const Addbrand = () => {
-  const navigate = useNavigate()
   const dispatch = useDispatch()
   const { isSuccess, isError, isLoading, createdBrand } = useStore().newBrand
 
@@ -32,7 +31,7 @@ const Addbrand = () => {
       formik.resetForm()
 
       setTimeout(() => {
-        navigate('/admin/list-brand')
+        dispatch(resetState())
       }, 3000)
     }
   })
