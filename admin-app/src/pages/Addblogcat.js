@@ -1,15 +1,16 @@
 import React, { useEffect } from 'react'
 import CustomInput from '../components/CustomInput'
 import { useDispatch } from 'react-redux'
-import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { useFormik } from 'formik'
 import { titleSchema } from '../utils/validations'
-import { createBlogCategory } from '../features/bcategory/bcategorySlice'
+import {
+  createBlogCategory,
+  resetState
+} from '../features/bcategory/bcategorySlice'
 import { useStore } from '../hooks/useStore'
 
 const Addblogcat = () => {
-  const navigate = useNavigate()
   const dispatch = useDispatch()
   const { isSuccess, isError, isLoading, createdBlogCategory } =
     useStore().newBlogCategory
@@ -33,7 +34,7 @@ const Addblogcat = () => {
       formik.resetForm()
 
       setTimeout(() => {
-        navigate('/admin/list-blog-category')
+        dispatch(resetState())
       }, 3000)
     }
   })
