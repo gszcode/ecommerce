@@ -7,16 +7,14 @@ import Dropzone from 'react-dropzone'
 import { deleteImg, uploadImg } from '../features/upload/uploadSlice'
 import { useFormik } from 'formik'
 import { toast } from 'react-toastify'
-import { useNavigate } from 'react-router-dom'
 import { blogSchema } from '../utils/validations'
 import { useStore } from '../hooks/useStore'
-import { createBlog } from '../features/blog/blogSlice'
+import { createBlog, resetState } from '../features/blog/blogSlice'
 import { getCategories } from '../features/bcategory/bcategorySlice'
 
 const Addblog = () => {
-  const navigate = useNavigate()
   const dispatch = useDispatch()
-  const { imgState, bCategoryState,blogState } = useStore()
+  const { imgState, bCategoryState, blogState } = useStore()
   const { isSuccess, isError, isLoading, createdBlog } = blogState
 
   useEffect(() => {
@@ -49,7 +47,7 @@ const Addblog = () => {
       formik.resetForm()
 
       setTimeout(() => {
-        navigate('/admin/list-blog')
+        dispatch(resetState())
       }, 3000)
     }
   })
