@@ -72,7 +72,7 @@ const Addproduct = () => {
   })
 
   useEffect(() => {
-    formik.values.color = color
+    formik.values.color = color ? color : ' '
     formik.values.images = imgs
   }, [formik.values, color, imgs])
 
@@ -90,10 +90,7 @@ const Addproduct = () => {
     <div>
       <h3 className="mb-4 title">Add Product</h3>
       <div>
-        <form
-          onSubmit={formik.handleSubmit}
-          className="d-flex flex-column gap-3"
-        >
+        <form onSubmit={formik.handleSubmit}>
           <CustomInput
             type="text"
             label="Enter Product Title"
@@ -111,6 +108,7 @@ const Addproduct = () => {
               name="description"
               onChange={formik.handleChange('description')}
               value={formik.values.description}
+              className="mt-3"
             />
           </div>
           <div className="error">
@@ -132,7 +130,7 @@ const Addproduct = () => {
             onChange={formik.handleChange('brand')}
             onBlur={formik.handleBlur('brand')}
             value={formik.values.brand}
-            className="form-control py-3 mb-3"
+            className="form-control py-3 mt-3"
           >
             <option>Select Brand</option>
             {brandState.map((brand) => (
@@ -147,7 +145,7 @@ const Addproduct = () => {
             onChange={formik.handleChange('category')}
             onBlur={formik.handleBlur('category')}
             value={formik.values.category}
-            className="form-control py-3 mb-3"
+            className="form-control py-3 mt-3"
           >
             <option>Select Category</option>
             {pCategoryState.map((category) => (
@@ -162,7 +160,7 @@ const Addproduct = () => {
             onChange={formik.handleChange('tags')}
             onBlur={formik.handleBlur('tags')}
             value={formik.values.tags}
-            className="form-control py-3 mb-3"
+            className="form-control py-3 mt-3"
           >
             <option disabled>Select tags</option>
             <option value="featured">Featured</option>
@@ -176,7 +174,7 @@ const Addproduct = () => {
             mode="multiple"
             options={colors}
             allowClear
-            className="w-100"
+            className="w-100 mt-3"
             placeholder="Select colors"
             defaultValue={color}
             onChange={(i) => handleColors(i)}
@@ -196,7 +194,7 @@ const Addproduct = () => {
           <div className="error">
             {formik.touched.quantity && formik.errors.quantity}
           </div>
-          <div className="bg-white border-1 p-5 text-center">
+          <div className="bg-white border-1 p-5 text-center mt-3">
             <Dropzone
               onDrop={(acceptedFiles) => dispatch(uploadImg(acceptedFiles))}
             >
@@ -212,7 +210,7 @@ const Addproduct = () => {
               )}
             </Dropzone>
           </div>
-          <div className="showimages d-flex flex-wrap gap-3">
+          <div className="showimages d-flex flex-wrap gap-3 mt-3">
             {imgState.map((i, j) => (
               <div className="position-relative" key={j}>
                 <button
