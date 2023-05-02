@@ -10,13 +10,11 @@ import { getColors } from '../features/color/colorSlice'
 import { Select } from 'antd'
 import Dropzone from 'react-dropzone'
 import { deleteImg, uploadImg } from '../features/upload/uploadSlice'
-import { createProducts } from '../features/product/productSlice'
+import { createProducts, resetState } from '../features/product/productSlice'
 import { useStore } from '../hooks/useStore'
-import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
 const Addproduct = () => {
-  const navigate = useNavigate()
   const dispatch = useDispatch()
   const [color, setColor] = useState([])
   const { brandState, pCategoryState, colorState, imgState, newProduct } =
@@ -65,8 +63,9 @@ const Addproduct = () => {
       dispatch(createProducts(values))
       formik.resetForm()
       setColor(null)
+
       setTimeout(() => {
-        navigate('/admin/list-product')
+        dispatch(resetState())
       }, 3000)
     }
   })
