@@ -32,9 +32,9 @@ function App() {
           <Route path="/admin" element={<MainLayout />}>
             <Route index element={<Dashboard />} />
             <Route path="enquiries" element={<Enquires />} />
-            <Route path="blog-list" element={<Bloglist />} />
+            <Route path="list-blog" element={<Bloglist />} />
             <Route path="blog" element={<Addblog />} />
-            <Route path="blog-category-list" element={<Blogcatlist />} />
+            <Route path="list-blog-category" element={<Blogcatlist />} />
             <Route path="blog-category" element={<Addblogcat />} />
             <Route path="orders" element={<Orders />} />
             <Route path="customers" element={<Customers />} />
