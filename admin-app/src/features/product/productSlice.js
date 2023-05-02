@@ -1,5 +1,7 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
+import { createSlice, createAsyncThunk, createAction } from '@reduxjs/toolkit'
 import productService from './productService'
+
+export const resetState = createAction('Reset_all')
 
 const initialState = {
   products: [],
@@ -36,36 +38,38 @@ export const productSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(getProducts.pending, (state) => {
-      state.isLoading = true
-    })
-    builder.addCase(getProducts.fulfilled, (state, action) => {
-      state.isLoading = false
-      state.isError = false
-      state.isSuccess = true
-      state.products = action.payload
-    })
-    builder.addCase(getProducts.rejected, (state, action) => {
-      state.isLoading = false
-      state.isError = false
-      state.isSuccess = true
-      state.message = action.error
-    })
-    builder.addCase(createProducts.pending, (state) => {
-      state.isLoading = true
-    })
-    builder.addCase(createProducts.fulfilled, (state, action) => {
-      state.isLoading = false
-      state.isError = false
-      state.isSuccess = true
-      state.createdProduct = action.payload
-    })
-    builder.addCase(createProducts.rejected, (state, action) => {
-      state.isLoading = false
-      state.isError = true
-      state.isSuccess = false
-      state.message = action.error
-    })
+    builder
+      .addCase(getProducts.pending, (state) => {
+        state.isLoading = true
+      })
+      .addCase(getProducts.fulfilled, (state, action) => {
+        state.isLoading = false
+        state.isError = false
+        state.isSuccess = true
+        state.products = action.payload
+      })
+      .addCase(getProducts.rejected, (state, action) => {
+        state.isLoading = false
+        state.isError = false
+        state.isSuccess = true
+        state.message = action.error
+      })
+      .addCase(createProducts.pending, (state) => {
+        state.isLoading = true
+      })
+      .addCase(createProducts.fulfilled, (state, action) => {
+        state.isLoading = false
+        state.isError = false
+        state.isSuccess = true
+        state.createdProduct = action.payload
+      })
+      .addCase(createProducts.rejected, (state, action) => {
+        state.isLoading = false
+        state.isError = true
+        state.isSuccess = false
+        state.message = action.error
+      })
+      .addCase(resetState, () => initialState)
   }
 })
 
