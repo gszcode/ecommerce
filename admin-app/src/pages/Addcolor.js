@@ -1,15 +1,13 @@
 import React, { useEffect } from 'react'
 import CustomInput from '../components/CustomInput'
 import { useDispatch } from 'react-redux'
-import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { useFormik } from 'formik'
 import { colorSchema } from '../utils/validations'
-import { createColor } from '../features/color/colorSlice'
+import { createColor, resetState } from '../features/color/colorSlice'
 import { useStore } from '../hooks/useStore'
 
 const Addcolor = () => {
-  const navigate = useNavigate()
   const dispatch = useDispatch()
   const { isSuccess, isError, isLoading, createdColor } = useStore().newColor
 
@@ -33,7 +31,7 @@ const Addcolor = () => {
       formik.resetForm()
 
       setTimeout(() => {
-        navigate('/admin/list-color')
+        dispatch(resetState())
       }, 3000)
     }
   })
