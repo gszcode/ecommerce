@@ -106,6 +106,23 @@ const MainLayout = () => {
               label: 'Orders'
             },
             {
+              key: 'marketing',
+              icon: <FaBloggerB className="fs-4" />,
+              label: 'Marketing',
+              children: [
+                {
+                  key: 'coupon',
+                  icon: <ImBlog className="fs-4" />,
+                  label: 'Add Coupon'
+                },
+                {
+                  key: 'list-coupon',
+                  icon: <FaClipboardList className="fs-4" />,
+                  label: 'Coupon List'
+                }
+              ]
+            },
+            {
               key: 'blog',
               icon: <FaBloggerB className="fs-4" />,
               label: 'Blogs',
